@@ -1,5 +1,4 @@
 import React from 'react'
-import catchErrors from '../utils/catchErrors'
 import { handleLogin } from '../utils/auth'
 
 const INITIAL_USER = {
@@ -28,10 +27,10 @@ export default function Login() {
             if (token) {
                 handleLogin(token)
             } else {
-                setError('Something went wrong')
+                setError(data.msg)
             }
         } catch(err) {
-            catchErrors(err, setError)
+            setError(err)
         }
     }
 
@@ -42,6 +41,7 @@ export default function Login() {
     
     return (
         <form onSubmit={handleSubmit}>
+            <h1>Log In</h1>
             <h2>{error}</h2>
             <input type="text" name="email" placeholder="email" value={user.email} onChange={handleChange} />
             <br />

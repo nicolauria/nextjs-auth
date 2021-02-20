@@ -8,22 +8,21 @@ import isLength from 'validator/lib/isLength'
 connectDB()
 
 export default async (req, res) => {
-    console.log(req.body)
     const { name, email, password } = req.body;
     try {
         // validate the name, email and password
         if (!isLength(name, { min: 3, max: 10 })) {
-            return res.status(422).send('Name must be 3 to 10 characters long')
-        } else if (!isLength(password, { min: 6 })) {
-            return res.status(422).send('Password must be 6 characters long')
+            return res.status(422).json({ msg: 'Name must be 3 to 10 characters long' })
         } else if (!isEmail(email)) {
-            return res.status(422).send('The email is not valid')
+            return res.status(422).json({ msg: 'The email is not valid' })
+        } else if (!isLength(password, { min: 6 })) {
+            return res.status(422).json({ msg: 'Password must be 6 characters long' })
         }
         
         // check to see if user already exists
         const user = await User.findOne({ email })
         if (user) {
-            return res.status(422).send('User with that email already exists')
+            return res.status(422).json({ msg: 'User with that email already exists' })
         }
 
         // if not, hash their password
@@ -44,6 +43,6 @@ export default async (req, res) => {
         res.status(201).json({ token });
     } catch(err) {
         console.error(err)
-        res.status(500).send('Error signing up user.')
+        res.status(500).json({ msg: 'Error signing up user.' })
     }
 }
