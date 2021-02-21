@@ -19,7 +19,7 @@ class MyApp extends App {
       if (isProtectedRoute) {
         redirectUser(ctx, '/login')
       }
-    } else {
+    } else if (ctx.pathname !== "/login") {
       try {
         const verified = jwt.verify(token, process.env.JWT_SECRET)
       } catch(err) {
